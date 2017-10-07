@@ -1,156 +1,65 @@
-# VS Code Angular Files
+# angular1-files-ts README
 
-This extension allows **quickly scaffold angular 2 file templates** in VS Code project.
-
-> Inspired by angular-cli (https://github.com/angular/angular-cli)
-
-![](https://github.com/qwert789/vscode-angular2-files/raw/master/images/add-files.gif)
-
-## Changelog
-
-### 1.3.10
-* Fix .angular-cli.json was automatically included in every non cli project
-* Fix add module declarations to *.module.ts  instead of *.module.js
-
-### 1.3.9
-* Multiple enhancements and performance improvements
-* Added support for .angular-cli.json flexible file generation
-
-```json
-    "defaults": {
-        "styleExt": "css",
-        "component": {
-            "spec": true,
-            "inlineStyle": false,
-            "inlineTemplate": false,
-            "flat": false,
-            "changeDetection": "Default",
-            "viewEncapsulation": "Emulated"
-        },
-        "class": {
-            "spec": false
-        }, 
-        "directive": {
-            "flat": true,
-            "spec": true
-        },
-        "guard": {
-            "flat": true,
-            "spec": true
-        },
-        "interface": {
-            "prefix": ""
-        },
-        "module": {
-            "flat": false,
-            "spec": false
-        },
-        "pipe": {
-            "flat": true,
-            "spec": true
-        },
-        "service": {
-            "flat": true,
-            "spec": true
-        }
-    }
-```
-
-### 1.3.8
-* Fixed support for custom app structure
-
-### 1.3.7
-* It's just angular
-* Module style ext fix - thanks to Sam Lin
-
-### 1.3.6
-* Fix incorrect extension in component generation
-
-### 1.3.5
-* CPU usage improvements 
-
-### 1.3.4
-
-* Support for non angular-cli file-structure, code should reside in 'app' folder by default 
-* Fixed import declarations to incorrect module
-* Added route class generat template
- 
-### 1.3.2
-
-* Angular-Files now supports angular-cli.json and you can use custom prefixes, different style extensions.
-* Note: if you not using angular-cli it is possible to add angular-cli.json to customize file generatiion.
-
-### 1.3.1
-
-* Fixed serivces was incorrectly imported to module declarations
-
-### 1.3.0
-
-* Fixed import declarations to closest module
-
-### 1.1.0
-
-* **angular-cli** removed due to slowness
-* **app.module** added automatic import of dependencies
-
-### 1.0.0
-* Integrated angular-cli for file generation 
-
+This is the README for your extension "angular1-files-ts". After writing up a brief description, we recommend including the following sections.
 
 ## Features
 
-Right click on a file or a folder in your current project. 
-You can find multiple options been added to the context menu:
+Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
 
-Menu Options  |
----           | 
-New Component |
-New Directive | 
-New Pipe      |
-New Service   | 
-New Module    |
+For example if there is an image subfolder under your extension project workspace:
 
-Menu Options  |
----           | 
-New Class     | 
-New Interface |
-New Enum      | 
+\!\[feature X\]\(images/feature-x.png\)
 
-** Override default configuration like app prefix and style:
-** Create a angular-cli.json (can be used without angular-cli):
+> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
 
-```json
-{
-   "apps":[
-      {
-         "root":"src",
-         "prefix":"app"
-      }
-   ],
-   "defaults":{
-      "styleExt":"css"
-   }
-}
-```
+## Requirements
 
-**The naming of the files as well as the (boilerplate) snippets are based on the [official Angular Style Guide](https://angular.io/docs/ts/latest/guide/style-guide.html)**
+If you have any requirements or dependencies, add a section describing those and how to install and configure them.
 
-## Installation
+## Extension Settings
 
-1. Install Visual Studio Code 1.5.0 or higher
-2. Launch Code
-3. From the command palette `Ctrl`-`Shift`-`P` (Windows, Linux) or `Cmd`-`Shift`-`P` (OSX)
-4. Select `Install Extension`
-5. Type `angular files` and press enter
-6. Reload Visual Studio Code
+Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
 
-# Disclaimer
+For example:
 
-**Important:** This extension due to the nature of it's purpose will create
-files on your hard drive and if necessary create the respective folder structure.
-While it should not override any files during this process, I'm not giving any guarantees
-or take any responsibility in case of lost data. 
+This extension contributes the following settings:
 
-# License
+* `myExtension.enable`: enable/disable this extension
+* `myExtension.thing`: set to `blah` to do something
 
-MIT
+## Known Issues
+
+Calling out known issues can help limit users opening duplicate issues against your extension.
+
+## Release Notes
+
+Users appreciate release notes as you update your extension.
+
+### 1.0.0
+
+Initial release of ...
+
+### 1.0.1
+
+Fixed issue #.
+
+### 1.1.0
+
+Added features X, Y, and Z.
+
+-----------------------------------------------------------------------------------------------------------
+
+## Working with Markdown
+
+**Note:** You can author your README using Visual Studio Code.  Here are some useful editor keyboard shortcuts:
+
+* Split the editor (`Cmd+\` on OSX or `Ctrl+\` on Windows and Linux)
+* Toggle preview (`Shift+CMD+V` on OSX or `Shift+Ctrl+V` on Windows and Linux)
+* Press `Ctrl+Space` (Windows, Linux) or `Cmd+Space` (OSX) to see a list of Markdown snippets
+
+### For more information
+
+* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
+* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
+
+**Enjoy!**

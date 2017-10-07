@@ -6,7 +6,7 @@ export const config: IConfig = {
         "prefix": "app"
     }],
     "defaults": {
-        "styleExt": "css",
+        "styleExt": "less",
         "component": {
             "spec": true,
             "inlineStyle": false,

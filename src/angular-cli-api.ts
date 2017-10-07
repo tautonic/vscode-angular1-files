@@ -250,49 +250,13 @@ export class AngularCli {
     }
   }
 
-  public generateComponent = async (loc: IPath, config: IConfig) => {
-    if (!config.defaults.component.flat) {
-      loc.dirName = loc.fileName;
-    }
-    loc.dirPath = path.join(loc.dirPath, loc.dirName);
-
-    this.addDeclarationsToModule(loc, "component");
-
-    // create an IFiles array including file names and contents
-    let files: IFiles[] = [{
-      name: path.join(loc.dirPath, `${loc.fileName}.component.ts`),
-      content: this.fc.componentContent(loc.fileName, config)
-    }];
-
-    if (!config.defaults.component.inlineStyle) {
-      files.push({
-        name: path.join(loc.dirPath, `${loc.fileName}.component.${config.defaults.styleExt}`),
-        content: this.fc.componentCSSContent(loc.fileName)
-      });
-    }
-
-    if (!config.defaults.component.inlineTemplate) {
-      files.push({
-        name: path.join(loc.dirPath, `${loc.fileName}.component.html`),
-        content: this.fc.componentHTMLContent(loc.fileName)
-      });
-    }
-
-    if (config.defaults.component.spec) {
-      files.push({
-        name: path.join(loc.dirPath, `${loc.fileName}.component.spec.ts`),
-        content: this.fc.componentTestContent(loc.fileName)
-      });
-    }
-
-    if (!config.defaults.component.flat) {
-      await this.createFolder(loc);
-    }
-
-    await this.createFiles(loc, files);
-  }
-
   public generateDirective = async (loc: IPath, config: IConfig) => {
+    var dirName = loc.dirName;
+    
+    var fileNameUpperCase: string = loc.fileName;
+    fileNameUpperCase = fileNameUpperCase.charAt(0).toUpperCase() + fileNameUpperCase.slice(1);
+    fileNameUpperCase = this.camelCase(fileNameUpperCase);
+
     if (!config.defaults.directive.flat) {
       loc.dirName = loc.fileName;
     }
@@ -302,15 +266,19 @@ export class AngularCli {
     // create an IFiles array including file names and contents
     var files: IFiles[] = [
       {
-        name: path.join(loc.dirPath, `${loc.fileName}.directive.ts`),
-        content: this.fc.directiveContent(loc.fileName, config)
+        name: path.join(loc.dirPath, `${loc.fileName}.directive.js`),
+        content: this.fc.directiveContent(loc.fileName, fileNameUpperCase, dirName, config)
+      },
+      {
+        name: path.join(loc.dirPath, `${loc.fileName}.html`),
+        content: this.fc.directiveHtml(loc.fileName, fileNameUpperCase, dirName, config)
       }
     ];
 
     if (config.defaults.directive.spec) {
       files.push({
-        name: path.join(loc.dirPath, `${loc.fileName}.directive.spec.ts`),
-        content: this.fc.directiveTestContent(loc.fileName)
+        name: path.join(loc.dirPath, `${loc.fileName}.directive.spec.js`),
+        content: this.fc.directiveTestContent(loc.fileName, fileNameUpperCase, dirName, config)
       });
     }
     if (!config.defaults.directive.flat) {
@@ -320,105 +288,32 @@ export class AngularCli {
     await this.createFiles(loc, files);
   }
 
-  public generatePipe = async (loc: IPath, config: IConfig) => {
-    if (!config.defaults.pipe.flat) {
-      loc.dirName = loc.fileName;
-    }
-    loc.dirPath = path.join(loc.dirPath, loc.dirName);
-
-    this.addDeclarationsToModule(loc, "pipe");
-
-    // create an IFiles array including file names and contents
-    var files: IFiles[] = [
-      {
-        name: path.join(loc.dirPath, `${loc.fileName}.pipe.ts`),
-        content: this.fc.pipeContent(loc.fileName)
-      }
-    ];
-
-    if (config.defaults.pipe.spec) {
-      files.push({
-        name: path.join(loc.dirPath, `${loc.fileName}.pipe.spec.ts`),
-        content: this.fc.pipeTestContent(loc.fileName)
-      });
-    }
-    if (!config.defaults.pipe.flat) {
-      await this.createFolder(loc);
-    }
-    await this.createFiles(loc, files);
-  }
-
   public generateService = async (loc: IPath, config: IConfig) => {
+    var fileNameUpperCase: string = loc.fileName;
+    fileNameUpperCase = fileNameUpperCase.charAt(0).toUpperCase() + fileNameUpperCase.slice(1);
+    fileNameUpperCase = this.camelCase(fileNameUpperCase);
+
     // create an IFiles array including file names and contents
     var files: IFiles[] = [
       {
-        name: path.join(loc.dirPath, `${loc.fileName}.service.ts`),
-        content: this.fc.serviceContent(loc.fileName)
+        name: path.join(loc.dirPath, `${loc.fileName}service.js`),
+        content: this.fc.serviceContent(loc.fileName, loc.dirName, config)
       }
     ];
     if (config.defaults.service.spec) {
       files.push({
-        name: path.join(loc.dirPath, `${loc.fileName}.service.spec.ts`),
-        content: this.fc.serviceTestContent(loc.fileName)
+        name: path.join(loc.dirPath, `${loc.fileName}service.spec.js`),
+        content: this.fc.serviceTestContent(loc.fileName, loc.dirName, config)
       });
     }
-    await this.createFiles(loc, files);
-  }
-
-  public generateClass = async (loc: IPath, config: IConfig) => {
-    // create an IFiles array including file names and contents
-    var files: IFiles[] = [
-      {
-        name: path.join(loc.dirPath, `${loc.fileName}.ts`),
-        content: this.fc.classContent(loc.fileName)
-      }
-    ];
-    if (config.defaults.class.spec) {
-      files.push({
-        name: path.join(loc.dirPath, `${loc.fileName}.spec.ts`),
-        content: this.fc.classTestContent(loc.fileName)
-      });
-    }
-    await this.createFiles(loc, files);
-  }
-
-  public generateInterface = async (loc: IPath, config: IConfig) => {
-    // create an IFiles array including file names and contents
-    var files: IFiles[] = [
-      {
-        name: path.join(loc.dirPath, `${loc.fileName}.ts`),
-        content: this.fc.interfaceContent(loc.fileName, config)
-      }
-    ];
-
-    await this.createFiles(loc, files);
-  }
-
-  public generateRoute = async (loc: IPath, config: IConfig) => {
-    // create an IFiles array including file names and contents
-    var files: IFiles[] = [
-      {
-        name: path.join(loc.dirPath, `${loc.fileName}.routing.ts`),
-        content: this.fc.routeContent(loc.fileName)
-      }
-    ];
-
-    await this.createFiles(loc, files);
-  }
-
-  public generateEnum = async (loc: IPath, config: IConfig) => {
-    // create an IFiles array including file names and contents
-    var files: IFiles[] = [
-      {
-        name: path.join(loc.dirPath, `${loc.fileName}.enum.ts`),
-        content: this.fc.enumContent(loc.fileName)
-      }
-    ];
-
     await this.createFiles(loc, files);
   }
 
   public generateModule = async (loc: IPath, config: IConfig) => {
+
+    var fileNameUpperCase: string = loc.fileName;
+    fileNameUpperCase = fileNameUpperCase.charAt(0).toUpperCase() + fileNameUpperCase.slice(1);
+    fileNameUpperCase = this.camelCase(fileNameUpperCase);
 
     if (!config.defaults.module.flat) {
       loc.dirName = loc.fileName;
@@ -428,26 +323,34 @@ export class AngularCli {
     // create an IFiles array including file names and contents
     var files: IFiles[] = [
       {
-        name: path.join(loc.dirPath, `${loc.fileName}.component.${config.defaults.styleExt}`),
-        content: this.fc.componentCSSContent(loc.fileName)
+        name: path.join(loc.dirPath, `${loc.fileName}.style.${config.defaults.styleExt}`),
+        content: this.fc.moduleCSSContent(loc.fileName, fileNameUpperCase, config)
       },
       {
-        name: path.join(loc.dirPath, `${loc.fileName}.component.html`),
-        content: this.fc.componentHTMLContent(loc.fileName)
+        name: path.join(loc.dirPath, `${loc.fileName}.html`),
+        content: this.fc.componentHTMLContent(loc.fileName, fileNameUpperCase, config)
       },
       {
-        name: path.join(loc.dirPath, `${loc.fileName}.component.ts`),
-        content: this.fc.componentContent(loc.fileName, config)
+        name: path.join(loc.dirPath, `${loc.fileName}.module.js`),
+        content: this.fc.moduleContent(loc.fileName, fileNameUpperCase, config)
       },
       {
-        name: path.join(loc.dirPath, `${loc.fileName}.module.ts`),
-        content: this.fc.moduleContent(loc.fileName)
+        name: path.join(loc.dirPath, `${loc.fileName}.controller.js`),
+        content: this.fc.controllerContent(loc.fileName, fileNameUpperCase, config)
+      },
+      {
+        name: path.join(loc.dirPath, `${loc.fileName}.route.js`),
+        content: this.fc.routeContent(loc.fileName, fileNameUpperCase, config)
       }
     ];
     if (config.defaults.module.spec) {
       files.push({
-        name: path.join(loc.dirPath, `${loc.fileName}.component.spec.ts`),
-        content: this.fc.componentTestContent(loc.fileName)
+        name: path.join(loc.dirPath, `${loc.fileName}.controller.spec.js`),
+        content: this.fc.controllerTestContent(loc.fileName, fileNameUpperCase, config)
+      });
+      files.push({
+        name: path.join(loc.dirPath, `${loc.fileName}.route.spec.js`),
+        content: this.fc.routeTestContent(loc.fileName, fileNameUpperCase, config)
       });
     }
 

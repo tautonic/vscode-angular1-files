@@ -6,284 +6,360 @@ export class FileContents {
       return letter.toUpperCase();
     });
   }
+  
+  public moduleContent(inputName: string, inputNameUpperCase: string, config: IConfig): string {
+    const content: string = `
+(function() {
+  'use strict';
 
-  public componentSCSSContent(inputName: string): string {
-    var inputUpperCase: string;
-    inputUpperCase = inputName.charAt(0).toUpperCase() + inputName.slice(1);
-    inputUpperCase = this.camelCase(inputUpperCase);
+  angular.module('app.${inputName}', [
+    'app.core',
+    'app.widgets'
+  ]);
+})();`;
+    return content;
+  }
 
-    var componentContent: string = ``;
+  public moduleCSSContent(inputName: string, inputNameUpperCase: string, config: IConfig): string {
+    var componentContent: string = `
+.fa-${inputName} {
+
+}`;
     return componentContent;
   }
 
-  public componentCSSContent(inputName: string): string {
-    var inputUpperCase: string;
-    inputUpperCase = inputName.charAt(0).toUpperCase() + inputName.slice(1);
-    inputUpperCase = this.camelCase(inputUpperCase);
-
-    var componentContent: string = ``;
-    return componentContent;
-  }
-
-  public componentHTMLContent(inputName: string): string {
-    var inputUpperCase: string;
-    inputUpperCase = inputName.charAt(0).toUpperCase() + inputName.slice(1);
-    inputUpperCase = this.camelCase(inputUpperCase);
-
+  public componentHTMLContent(inputName: string, inputNameUpperCase: string, config: IConfig): string {
     var componentContent: string = `<p>
   ${inputName} works!
 </p>`;
     return componentContent;
   }
 
-  public componentContent(inputName: string, config: IConfig): string {
-    var inputUpperCase: string;
-    inputUpperCase = inputName.charAt(0).toUpperCase() + inputName.slice(1);
-    inputUpperCase = this.camelCase(inputUpperCase);
+  public controllerContent(inputName: string, inputNameUpperCase: string, config: IConfig): string {
+    var content: string = `
+(function () {
+  'use strict';
 
-    var componentContent: string = `import { Component, OnInit${config.defaults.component.viewEncapsulation !== "Emulated" ? ', ViewEncapsulation' : ''}${config.defaults.component.changeDetection !== "Default" ? ', ChangeDetectionStrategy' : ''} } from '@angular/core';
+  angular
+    .module('app.${inputName}')
+    .controller('${inputNameUpperCase}Controller', ${inputNameUpperCase}Controller);
 
-@Component({
-  selector: '${config.apps[0].prefix}-${inputName}',
-  ${config.defaults.component.inlineTemplate ? `template: \`\n   <p>\n  \t\t${inputName} Works!\n   </p>\n  \`` : `templateUrl: './${inputName}.component.html'`},
-  ${config.defaults.component.inlineStyle ? 'styles: []' : `styleUrls: ['./${inputName}.component.${config.defaults.styleExt}']`}${config.defaults.component.viewEncapsulation !== "Emulated" ? `,\n  encapsulation: ViewEncapsulation.${config.defaults.component.viewEncapsulation}` : ''}${config.defaults.component.changeDetection !== "Default" ? `,\n  changeDetection: ChangeDetectionStrategy.OnPush` : ''}
-})
-export class ${inputUpperCase}Component implements OnInit {
+  ${inputNameUpperCase}Controller.$inject = ['logger'];
 
-  constructor() { }
+  /* @ngInject */
+  function ${inputNameUpperCase}Controller(logger) {
+    var vm = this;
+    vm.title = '${inputNameUpperCase}';
 
-  ngOnInit() {
+    activate();
+
+    ////////////////
+
+    function activate() {
+      logger.info('Activated ${inputNameUpperCase} View');
+      //start writing code here
+
+    }
   }
 
-}
-`;
-    return componentContent;
-  }
-
-  public componentTestContent(inputName: string): string {
-    var inputUpperCase: string;
-    inputUpperCase = inputName.charAt(0).toUpperCase() + inputName.slice(1);
-    inputUpperCase = this.camelCase(inputUpperCase);
-
-    var componentContent: string = `/* tslint:disable:no-unused-variable */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-import { DebugElement } from '@angular/core';
-
-import { ${inputUpperCase}Component } from './${inputName}.component';
-
-describe('${inputUpperCase}Component', () => {
-  let component: ${inputUpperCase}Component;
-  let fixture: ComponentFixture<${inputUpperCase}Component>;
-
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ ${inputUpperCase}Component ]
-    })
-    .compileComponents();
-  }));
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(${inputUpperCase}Component);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-});
-`;
-    return componentContent;
-  }
-
-  public moduleContent(inputName: string): string {
-    let upperName = this.toUpperCase(inputName);
-
-    var componentContent: string = `import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ${upperName}Component } from './${inputName}.component';
-
-@NgModule({
-  imports: [
-    CommonModule
-  ],
-  declarations: [${upperName}Component]
-})
-export class ${upperName}Module { }`;
-    return componentContent;
-  }
-
-  public serviceContent(inputName: string): string {
-    var inputUpperCase: string;
-    inputUpperCase = inputName.charAt(0).toUpperCase() + inputName.slice(1);
-    inputUpperCase = this.camelCase(inputUpperCase);
-
-    let content: string = `import { Injectable } from '@angular/core';
-
-@Injectable()
-export class ${inputUpperCase}Service {
-
-constructor() { }
-
-}`;
+})();`;
     return content;
   }
 
-  public serviceTestContent(inputName: string): string {
-    var inputUpperCase: string;
-    inputUpperCase = inputName.charAt(0).toUpperCase() + inputName.slice(1);
-    inputUpperCase = this.camelCase(inputUpperCase);
+  public controllerTestContent(inputName: string, inputNameUpperCase: string, config: IConfig): string {
+    var content: string = `
+/* jshint -W117, -W030 */
+describe('${inputNameUpperCase}Controller', function() {
+  var controller;
 
-    let content: string = `/* tslint:disable:no-unused-variable */
+  beforeEach(function() {
+    bard.appModule('app.${inputName}');
+    bard.inject('$controller', '$log', '$rootScope');
+  });
 
-import { TestBed, async, inject } from '@angular/core/testing';
-import { ${inputUpperCase}Service } from './${inputName}.service';
+  beforeEach(function() {
+    controller = $controller('${inputNameUpperCase}Controller');
+    $rootScope.$apply();
+  });
 
-describe('Service: ${inputUpperCase}', () => {
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [${inputUpperCase}Service]
+  bard.verifyNoOutstandingHttpRequests();
+
+  describe('${inputNameUpperCase} controller', function() {
+    it('should be created successfully', function() {
+      expect(controller).to.be.defined;
+    });
+
+    describe('after activate', function() {
+      it('should have title of ${inputNameUpperCase}', function() {
+        expect(controller.title).to.equal('${inputNameUpperCase}');
+      });
+
+      it('should have logged "Activated"', function() {
+        expect($log.info.logs).to.match(/Activated/);
+      });
+    });
+  });
+});`;
+    return content;
+  }
+
+  public routeContent(inputName: string, inputNameUpperCase: string, config: IConfig): string {
+    var content: string = `
+(function() {
+  'use strict';
+
+  angular
+    .module('app.${inputName}')
+    .run(appRun);
+
+  appRun.$inject = ['routerHelper'];
+  /* @ngInject */
+  function appRun(routerHelper) {
+    routerHelper.configureStates(getStates());
+  }
+
+  function getStates() {
+    return [
+      {
+        state: '${inputName}',
+        config: {
+          url: '/',
+          templateUrl: 'app/${inputName}/${inputName}.html',
+          controller: '${inputNameUpperCase}Controller',
+          controllerAs: 'vm',
+          title: '${inputName}',
+          settings: {
+            nav: 1,
+            content: '<i class="fa fa-${inputName}"></i> ${inputNameUpperCase}'
+          }
+        }
+      }
+    ];
+  }
+})();`;
+    return content;
+  }
+
+  public routeTestContent(inputName: string, inputNameUpperCase: string, config: IConfig): string {
+    var content: string = `
+/* jshint -W117, -W030 */
+describe('${inputName} routes', function() {
+  describe('state', function() {
+    var view = 'app/${inputName}/${inputName}.html';
+
+    beforeEach(function() {
+      module('app.${inputName}', bard.fakeToastr);
+      bard.inject('$httpBackend', '$location', '$rootScope', '$state', '$templateCache');
+    });
+
+    beforeEach(function() {
+      $templateCache.put(view, '');
+    });
+
+    bard.verifyNoOutstandingHttpRequests();
+
+    it('should map state ${inputName} to url / ', function() {
+      expect($state.href('${inputName}', {})).to.equal('/');
+    });
+
+    it('should map /${inputName} route to ${inputName} View template', function() {
+      expect($state.get('${inputName}').templateUrl).to.equal(view);
+    });
+
+    it('of ${inputName} should work with $state.go', function() {
+      $state.go('${inputName}');
+      $rootScope.$apply();
+      expect($state.is('${inputName}'));
+    });
+  });
+});`;
+    return content;
+  }
+
+  public serviceContent(inputName: string, dirName: string, config: IConfig): string {
+    const content: string = `
+(function() {
+  'use strict';
+
+  angular
+    .module('app.${dirName}')
+    .factory('${inputName}', ${inputName});
+
+  ${inputName}.$inject = ['$q', 'logger'];
+  /* @ngInject */
+  function ${inputName}($q, logger) {
+    var service = {
+      getServiceName: getServiceName
+    };
+
+    return service;
+
+    function getServiceName() {
+      return $q.when('${inputName}');
+    }
+  }
+})();`;
+    return content;
+  }
+
+  public serviceTestContent(inputName: string, dirName: string, config: IConfig): string {
+    const content: string = `
+/* jshint -W117, -W030 */
+describe('${inputName}', function() {
+  var ${inputName};
+  var mocks = {
+    testErrorMessage: 'testErrorMessage'
+  };
+
+  beforeEach(function() {
+    bard.appModule('app.${dirName}', function(_${inputName}_) {
+      ${inputName} = _${inputName}_;
+    });
+    bard.inject('$rootScope');
+  });
+
+  bard.verifyNoOutstandingHttpRequests();
+
+  describe('${inputName}', function() {
+    it('should have a dummy test', inject(function() {
+      expect(true).to.equal(true);
+    }));
+
+    it('should have ${inputName} defined', inject(function() {
+      expect(${inputName}).to.be.defined;
+    }));
+
+    describe('with appErrorPrefix', function() {
+      beforeEach(function() {
+        //test setup routine
+
+      });
+
+      it('should have some behavior', inject(function() {
+        expect('some behavior').to.be.defined;
+      }));
+
+      it('should have some property equal to true', inject(function() {
+        expect(true)
+          .to.equal(true);
+      }));
+
+      it('should throw an error when forced', inject(function() {
+        expect(functionThatWillThrow).to.throw();
+      }));
+
     });
   });
 
-  it('should ...', inject([${inputUpperCase}Service], (service: ${inputUpperCase}Service) => {
-    expect(service).toBeTruthy();
+  function functionThatWillThrow() {
+    throw new Error(mocks.testErrorMessage);
+  }
+});`;
+    return content;
+  }
+
+
+  public directiveContent(inputName: string, inputNameUpperCase: string, dirName: string, 
+      config: IConfig): string {
+    const upperName = this.toUpperCase(inputName);
+
+    const content: string = `
+(function() {
+  'use strict';
+
+  angular
+    .module('app.${dirName}')
+    .directive('${inputNameUpperCase}', ${inputNameUpperCase});
+
+  /* @ngInject */
+  function ${inputNameUpperCase}() {
+    //Usage:
+    //<div ${inputName} title="vm.map.title"></div>
+    // Creates:
+    // <div ${inputName}=""
+    //      title="????"
+    //      allow-collapse="true" </div>
+    var directive = {
+      scope: {
+        'title': '@',
+        'subtitle': '@',
+        'rightText': '@',
+        'allowSomething': '@'
+      },
+      templateUrl: 'app/${dirName}/${inputName}.html',
+      restrict: 'EA',
+      link: link
+    };
+    return directive;
+
+    function link(scope, element, attr) {
+      scope.doSomething = function() {
+        if (scope.allowSomething === 'true') {
+          // var content = angular.element(element);
+          // content.doSomething();
+        }
+      };
+    }
+  }
+})();`;
+    return content;
+  }
+
+  public directiveHtml(inputName: string, inputNameUpperCase: string, dirName: string,
+      config: IConfig): string {
+    const upperName = this.toUpperCase(inputName);
+
+    const content: string = `
+<div class="widget-head" ng-class="{'someProperty': allowSomething === 'true'}" ng-click="doSomething()">
+  <div class="page-title pull-left">{{title}}</div>
+  <small class="page-title-subtle" ng-show="subtitle">({{subtitle}})</small>
+  <div class="widget-icons pull-right"></div>
+  <small class="pull-right page-title-subtle" ng-show="rightText">{{rightText}}</small>
+  <div class="clearfix"></div>
+</div>`;
+    return content;
+  }
+
+  public directiveTestContent(inputName: string, inputNameUpperCase: string, dirName: string, config: IConfig): string {
+    const upperName = this.toUpperCase(inputName);
+
+    const content: string = `
+/* jshint -W117, -W030 */
+describe('${inputName}.directive', function() {
+  var el;
+  var someClass = 'someClass';
+  
+  beforeEach(module('app.${dirName}'));
+
+  beforeEach(inject(function($compile, $rootScope) {
+    el = angular.element(
+      '<directive-tag>' +
+      '</directive-tag>');
+    
+    scope = $rootScope;
+    $compile(el)(scope);
+
+    // tell angular to look at the scope values right now
+    scope.$digest();
   }));
-});`;
-    return content;
-  }
 
+  bard.verifyNoOutstandingHttpRequests();
 
-  public directiveContent(inputName: string, config: IConfig): string {
-    let upperName = this.toUpperCase(inputName);
-
-    var content: string = `import { Directive } from '@angular/core';
-
-@Directive({
-  selector: '[${config.apps[0].prefix}${upperName}]'
-})
-export class ${upperName}Directive {
-
-  constructor() { }
-
-}`;
-    return content;
-  }
-
-  public directiveTestContent(inputName: string): string {
-    let upperName = this.toUpperCase(inputName);
-
-    var content: string = `/* tslint:disable:no-unused-variable */
-
-import { TestBed, async } from '@angular/core/testing';
-import { ${upperName}Directive } from './${inputName}.directive';
-
-describe('Directive: ${upperName}', () => {
-  it('should create an instance', () => {
-    const directive = new ${upperName}Directive();
-    expect(directive).toBeTruthy();
+  describe('${inputName}.directive controller', function() {
+    it('should behave a certain way', function() {
+      var hasClass = el.hasClass(someClass);
+      expect(hasClass).to.equal(false);
+    });
   });
 });`;
-    return content;
-  }
-
-
-  public pipeContent(inputName: string): string {
-    let upperName = this.toUpperCase(inputName);
-
-    var content: string = `import { Pipe, PipeTransform } from '@angular/core';
-
-@Pipe({
-  name: '${inputName}'
-})
-export class ${upperName}Pipe implements PipeTransform {
-
-  transform(value: any, args?: any): any {
-    return null;
-  }
-
-}`;
-    return content;
-  }
-
-  public pipeTestContent(inputName: string): string {
-    let upperName = this.toUpperCase(inputName);
-
-    var content: string = `/* tslint:disable:no-unused-variable */
-
-import { TestBed, async } from '@angular/core/testing';
-import { ${upperName}Pipe } from './${inputName}.pipe';
-
-describe('Pipe: ${upperName}e', () => {
-  it('create an instance', () => {
-    let pipe = new ${upperName}Pipe();
-    expect(pipe).toBeTruthy();
-  });
-});`;
-    return content;
-  }
-
-  public classContent(inputName: string): string {
-    let upperName = this.toUpperCase(inputName);
-
-    var content: string = `export class ${upperName} {
-}
-`;
-    return content;
-  }
-
-  public classTestContent(inputName: string): string {
-    var inputUpperCase: string;
-    inputUpperCase = inputName.charAt(0).toUpperCase() + inputName.slice(1);
-    inputUpperCase = this.camelCase(inputUpperCase);
-
-    var classContent: string = `import {${inputUpperCase}} from './${inputName}';
-
-describe('${inputUpperCase}', () => {
-  it('should create an instance', () => {
-    expect(new ${inputUpperCase}()).toBeTruthy();
-  });
-});
-`;
-    return classContent;
-  }
-
-  public interfaceContent(inputName: string, config: IConfig): string {
-    let upperName = this.toUpperCase(inputName);
-
-    var content: string = `export interface ${config.defaults.interface.prefix}${upperName} {
-}`;
-    return content;
-  }
-
-  public routeContent(inputName: string): string {
-    let upperName = this.toUpperCase(inputName);
-
-    var content: string = `import { Routes, RouterModule } from '@angular/router';
-
-const routes: Routes = [
-  {  },
-];
-
-export const ${upperName}Routes = RouterModule.forChild(routes);
-`;
-    return content;
-  }
-
-  public enumContent(inputName: string): string {
-    let upperName = this.toUpperCase(inputName);
-
-    var content: string = `export enum ${upperName} {
-}`;
     return content;
   }
 
   private toUpperCase(input: string): string {
-    let inputUpperCase: string;
-    inputUpperCase = input.charAt(0).toUpperCase() + input.slice(1);
-    inputUpperCase = this.camelCase(inputUpperCase);
+    let inputNameUpperCase: string;
+    inputNameUpperCase = input.charAt(0).toUpperCase() + input.slice(1);
+    inputNameUpperCase = this.camelCase(inputNameUpperCase);
 
-    return inputUpperCase;
+    return inputNameUpperCase;
   }
 }
